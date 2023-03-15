@@ -1,12 +1,23 @@
 "use strict";
+// constants
+const canvas = document.getElementById("gl-canvas");
+const gl = canvas.getContext("webgl");
+
+// program states
+var models = [] // models has model objects that has array of vec4 points and colors
+var program = "" // shader program in use
+var transform = [ 
+	[1.0, 0.0, 0.0, 0.0],
+	[0.0, 1.0, 0.0, 0.0],
+	[0.0, 0.0, 1.0, 0.0],
+	[0.0, 0.0, 0.0, 1.0]
+]
+// TODO: add modelview matrix
 
 function main() {
-	let canvas = document.getElementById("gl-canvas");
-	let gl = canvas.getContext("webgl");
-	
 	if (!gl) {
 		/* gl is not defined */
-		alert("Keliatannya perambanmu tidak mendukung WebGL. :(");
+		alert("Keliatannya browsermu tidak mendukung WebGL. :(");
 		
 	} else {
 		// Create shader
@@ -50,63 +61,74 @@ function main() {
 
 		} else {
 			gl.useProgram(shaderProgram);
+			program = shaderProgram;
 			
-			// Combine
-			const positionBuffer = gl.createBuffer();
-			gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-			const vertexCoord = gl.getAttribLocation(shaderProgram, "vPosition");
-			gl.vertexAttribPointer(vertexCoord, 4, gl.FLOAT, false, 0, 0);
-			gl.enableVertexAttribArray(vertexCoord);
-
-			const colorBuffer = gl.createBuffer();
-			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-			const colorCoord = gl.getAttribLocation(shaderProgram, "vColor");
-			gl.vertexAttribPointer(colorCoord, 4, gl.FLOAT, false, 0, 0);
-			gl.enableVertexAttribArray(colorCoord);
-
-			const transformationMatrix = [
-				1, 0, 0, 0.0,
-				0, 1, 0, 0.0,
-				0, 0, 1, 0.0,
-				0, 0, 0, 1,
-			];
-			var translationMatrixLoc = gl.getUniformLocation(shaderProgram, "transformationMatrix");
-			gl.uniformMatrix4fv(translationMatrixLoc, false, new Float32Array(transformationMatrix));
-			
-			gl.clearColor(0, 0, 0, 1.0);
-			gl.enable(gl.DEPTH_TEST);
-			gl.viewport(0, 0, canvas.width, canvas.height);
-
 			// Set up drawing
 			const positionArray = [
 				// Red triangle
-				0, 0, 0, 1,
-				0.5, 0, 0, 1,
-				0, 0.5, 0, 1,
+				[0, 0, 0, 1],
+				[0.5, 0, 0, 1],
+				[0, 0.5, 0, 1],
 
 				// Yellow triangle
-				0.2, 0.2, 0.2, 1,
-				0.7, 0.2, 0.2, 1,
-				0.2, 0.7, 0.2, 1,
+				[0.2, 0.2, 0.2, 1],
+				[0.7, 0.2, 0.2, 1],
+				[0.2, 0.7, 0.2, 1],
 			];
 			const colorArray = [
 				// Red triangle
-				1, 0, 0, 1,
-				1, 0, 0, 1,
-				1, 0, 0, 1,
+				[1, 0, 0, 1],
+				[1, 0, 0, 1],
+				[1, 0, 0, 1],
 
 				// Yellow triangle
-				1, 1, 0, 1,
-				1, 1, 0, 1,
-				1, 1, 0, 1,
+				[1, 1, 0, 1],
+				[1, 1, 0, 1],
+				[1, 1, 0, 1],
 			];
-			const mode = gl.TRIANGLES;
-			const vertexCount = 6;
-			
-			// Render part
-			gl.clear(gl.COLOR_BUFFER_BIT);
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+			let model = [];
+			model["points"] = positionArray;
+			model["colors"] = colorArray;
+			models.push(model);
+			render();
+		}
+	}
+}
+
+function renderModel(shaderProgram, positionArray, colorArray, transformationMatrix){
+	// Constants
+	const mode = gl.TRIANGLES;
+	const vertexCount = positionArray.length
+	console.log("rendering")
+
+	// Flatten matrices
+	positionArray = flatten2d(positionArray);
+	colorArray = flatten2d(colorArray);
+	transformationMatrix = flatten2d(transformationMatrix);
+
+	// WebGL Rendering
+	gl.clearColor(0, 0, 0, 1.0);
+	gl.enable(gl.DEPTH_TEST);
+	gl.viewport(0, 0, canvas.width, canvas.height);
+
+	// Combine
+	const positionBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	const vertexCoord = gl.getAttribLocation(shaderProgram, "vPosition");
+	gl.vertexAttribPointer(vertexCoord, 4, gl.FLOAT, false, 0, 0);
+	gl.enableVertexAttribArray(vertexCoord);
+
+	const colorBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+	const colorCoord = gl.getAttribLocation(shaderProgram, "vColor");
+	gl.vertexAttribPointer(colorCoord, 4, gl.FLOAT, false, 0, 0);
+	gl.enableVertexAttribArray(colorCoord);
+
+	var translationMatrixLoc = gl.getUniformLocation(shaderProgram, "transformationMatrix");
+	gl.uniformMatrix4fv(translationMatrixLoc, false, new Float32Array(transformationMatrix));
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 			gl.bufferData(
 				gl.ARRAY_BUFFER,
 				new Float32Array(positionArray),
@@ -121,8 +143,14 @@ function main() {
 			gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 			gl.drawArrays(mode, 0, vertexCount);
-		}
-	}
+}
+
+function render(){
+	gl.clear(gl.COLOR_BUFFER_BIT);
+	models.forEach(model => {
+		renderModel(program, model["points"], model["colors"], transform)
+	})
+	window.requestAnimFrame(render)
 }
 
 main();
