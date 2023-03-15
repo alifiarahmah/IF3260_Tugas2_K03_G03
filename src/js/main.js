@@ -14,6 +14,7 @@ var transform = [
 ]
 // TODO: add modelview matrix
 
+
 function main() {
 	if (!gl) {
 		/* gl is not defined */
@@ -63,34 +64,9 @@ function main() {
 			gl.useProgram(shaderProgram);
 			program = shaderProgram;
 			
-			// Set up drawing
-			const positionArray = [
-				// Red triangle
-				[0, 0, 0, 1],
-				[0.5, 0, 0, 1],
-				[0, 0.5, 0, 1],
+			// get model
+			models.push(base)
 
-				// Yellow triangle
-				[0.2, 0.2, 0.2, 1],
-				[0.7, 0.2, 0.2, 1],
-				[0.2, 0.7, 0.2, 1],
-			];
-			const colorArray = [
-				// Red triangle
-				[1, 0, 0, 1],
-				[1, 0, 0, 1],
-				[1, 0, 0, 1],
-
-				// Yellow triangle
-				[1, 1, 0, 1],
-				[1, 1, 0, 1],
-				[1, 1, 0, 1],
-			];
-
-			let model = [];
-			model["points"] = positionArray;
-			model["colors"] = colorArray;
-			models.push(model);
 			render();
 		}
 	}
@@ -108,7 +84,7 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 	transformationMatrix = flatten2d(transformationMatrix);
 
 	// WebGL Rendering
-	gl.clearColor(0, 0, 0, 1.0);
+	gl.clearColor(1, 1, 1, 1.0);
 	gl.enable(gl.DEPTH_TEST);
 	gl.viewport(0, 0, canvas.width, canvas.height);
 
