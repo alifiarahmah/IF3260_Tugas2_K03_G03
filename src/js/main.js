@@ -1,8 +1,8 @@
 "use strict";
 
 function main() {
-  canvas = document.getElementById("gl-canvas");
-	gl = canvas.getContext("webgl");
+	let canvas = document.getElementById("gl-canvas");
+	let gl = canvas.getContext("webgl");
 	
 	if (!gl) {
 		/* gl is not defined */
