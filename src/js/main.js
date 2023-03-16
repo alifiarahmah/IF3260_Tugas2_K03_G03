@@ -65,7 +65,7 @@ function main() {
 			program = shaderProgram;
 			
 			// get model
-			models.push(base)
+			models.push(prism)
 
 			render();
 		}
@@ -76,7 +76,6 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 	// Constants
 	const mode = gl.TRIANGLES;
 	const vertexCount = positionArray.length
-	console.log("rendering")
 
 	// Flatten matrices
 	positionArray = flatten2d(positionArray);

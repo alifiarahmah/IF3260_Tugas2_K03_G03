@@ -16,9 +16,9 @@ def draw_rect(pts): #input is 3d
 low_y = -0.8
 high_y = 0.8
 sides = 6
-radius = 1
+radius = 0.3
 thickness = 0.05
-color = [162, 142, 6, 1]
+color = [162/255, 142/255, 6/255, 1]
 
 # Calc triangles
 out_poly = []
