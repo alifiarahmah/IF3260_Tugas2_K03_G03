@@ -8,12 +8,22 @@ var models = [] // models has model objects that has array of vec4 points and co
 var program = "" // shader program in use
 var transform = [ 
 	[1.0, 0.0, 0.0, 0.0],
-	[0.0, 1.0, 0.0, 0.0],
-	[0.0, 0.0, 1.0, 0.0],
+	[0.0, 0.707, 0.707, 0.0],
+	[0.0, -0.707, 0.707, 0.0],
 	[0.0, 0.0, 0.0, 1.0]
 ]
-// TODO: add modelview matrix
-
+var modelView = [
+	[1, 0, 0, 0],
+	[0, 1, 0, 0],
+	[0, 0, 1, 0],
+	[0, 0, 0, 1]
+]
+var projection = [
+	[1, 0, 0, 0],
+	[0, 1, 0, 0],
+	[0, 0, 1, 0],
+	[0, 0, 0, 1]
+]
 
 function main() {
 	if (!gl) {
@@ -27,9 +37,12 @@ function main() {
 			attribute vec4 vColor;
 			varying vec4 fColor;
 			uniform mat4 transformationMatrix;
+			uniform mat4 modelViewMatrix;
+			uniform mat4 projectionMatrix;
+
 			void main()
 			{
-				gl_Position = vPosition * transformationMatrix;
+				gl_Position = projectionMatrix * modelViewMatrix * vPosition * transformationMatrix;
 				fColor = vColor;
 			}
 		`;
@@ -81,6 +94,8 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 	positionArray = flatten2d(positionArray);
 	colorArray = flatten2d(colorArray);
 	transformationMatrix = flatten2d(transformationMatrix);
+	let modelViewMatrix = flatten2d(modelView)
+	let projectionMatrix = flatten2d(projection)
 
 	// WebGL Rendering
 	gl.clearColor(1, 1, 1, 1.0);
@@ -102,6 +117,10 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 
 	var translationMatrixLoc = gl.getUniformLocation(shaderProgram, "transformationMatrix");
 	gl.uniformMatrix4fv(translationMatrixLoc, false, new Float32Array(transformationMatrix));
+	var modelViewMatrixLoc = gl.getUniformLocation(shaderProgram, "modelViewMatrix");
+	gl.uniformMatrix4fv(modelViewMatrixLoc, false, new Float32Array(modelViewMatrix));
+	var projectionMatrixLoc = gl.getUniformLocation(shaderProgram, "projectionMatrix");
+	gl.uniformMatrix4fv(projectionMatrixLoc, false, new Float32Array(projectionMatrix));
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 			gl.bufferData(

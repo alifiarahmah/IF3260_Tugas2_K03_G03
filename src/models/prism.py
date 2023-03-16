@@ -1,8 +1,7 @@
 import math
+import random
 
 def draw_rect(pts): #input is 3d
-    for c in pts:
-        c.append(1)
     ret = []
     anchor = pts[0]
     for i in range(1, len(pts)-1):
@@ -10,7 +9,7 @@ def draw_rect(pts): #input is 3d
         ret.append(anchor)
         ret.append(pts[i])
         ret.append(pts[adj])
-    return ret #output is 4d
+    return ret #output is 3d
 
 # Const
 low_y = -0.8
@@ -60,14 +59,14 @@ for i in range(len(out_poly)):
         [cur_out[0], low_y, cur_out[1]],
         [adj_out[0], low_y, adj_out[1]],
         [adj_out[0], high_y, adj_out[1]],
-        [cur_out[0], high_y, cur_out[1]],
+        [cur_out[0], high_y, cur_out[1]]
     ]
     points.extend(draw_rect(rect))
     rect = [
-        [adj_in[0], low_y, cur_in[1]],
+        [adj_in[0], low_y, adj_in[1]],
         [cur_in[0], low_y, cur_in[1]],
         [cur_in[0], high_y, cur_in[1]],
-        [adj_in[0], high_y, cur_in[1]],
+        [adj_in[0], high_y, adj_in[1]]
     ]
     points.extend(draw_rect(rect))
 
@@ -78,17 +77,19 @@ lines.append("const prism = {")
 # pts
 lines.append("\t\"points\": [")
 for pt in points:
-    lines.append(f"\t\t{pt}")
-    if pt != points[-1]:
-        lines[-1] += (",")
+    assert(len(pt)==3)
+    lines.append(f"\t\t[{pt[0]}, {pt[1]}, {pt[2]}, 1],")
+lines[-1] = lines[-1][:-1]
 lines.append("\t],")
 
 # colors
 lines.append("\t\"colors\": [")
 for pt in points:
-    lines.append(f"\t\t{color}")
-    if pt != points[-1]:
-        lines[-1] += (",")
+    c1 = random.randrange(0, 255)/255
+    c2 = random.randrange(0, 255)/255
+    c3 = random.randrange(0, 255)/255
+    lines.append(f"\t\t[{c1}, {c2}, {c3}, 1],")
+lines[-1] = lines[-1][:-1]
 lines.append("\t]")
 
 # close
