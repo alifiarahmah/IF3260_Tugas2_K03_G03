@@ -8,16 +8,12 @@ var models = [] // models has model objects that has array of vec4 points and co
 var program = "" // shader program in use
 var transform = [ 
 	[1.0, 0.0, 0.0, 0.0],
-	[0.0, 0.707, 0.707, 0.0],
-	[0.0, -0.707, 0.707, 0.0],
+	[0.0, 1.0, 0.0, 0.0],
+	[0.0, 0.0, 1.0, 0.0],
 	[0.0, 0.0, 0.0, 1.0]
 ]
-var modelView = [
-	[1, 0, 0, 0],
-	[0, 1, 0, 0],
-	[0, 0, 1, 0],
-	[0, 0, 0, 1]
-]
+var eye = [0, -0.01, -0.05]
+var up = [0, 1, 0]
 var projection = [
 	[1, 0, 0, 0],
 	[0, 1, 0, 0],
@@ -94,7 +90,7 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 	positionArray = flatten2d(positionArray);
 	colorArray = flatten2d(colorArray);
 	transformationMatrix = flatten2d(transformationMatrix);
-	let modelViewMatrix = flatten2d(modelView)
+	let modelViewMatrix = flatten2d(generateModelView(eye, up))
 	let projectionMatrix = flatten2d(projection)
 
 	// WebGL Rendering
