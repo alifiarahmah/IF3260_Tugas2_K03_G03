@@ -22,8 +22,12 @@ function addListener() {
 	function setCameraSlider(){
 		if (cameraAxis.value == "Y"){
 			cameraRotation.value = yAxis;
+			cameraRotation.min = 0;
+			cameraRotation.max = 360;
 		} else{
 			cameraRotation.value = xAxis;
+			cameraRotation.min = -90;
+			cameraRotation.max = 90;
 		}
 	}
 	

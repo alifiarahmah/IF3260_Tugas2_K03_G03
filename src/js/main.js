@@ -29,8 +29,8 @@ var projection = [
 
 // light vars
 var useShading = true;
-var lightPos = [1, 1, 1, 1];
-var lightColor = [1, 1, 1, 1];
+var lightPos = [1, 1, 1];
+var lightColor = [1, 1, 1];
 
 
 function main() {
@@ -51,15 +51,15 @@ function main() {
 			uniform mat4 modelViewMatrix;
 			uniform mat4 projectionMatrix;
 
-			out vec4 fPosition;
+			out vec3 fPosition;
 			out vec4 fColor;
 			out vec4 normal;
 
 			void main()
 			{
 				normal = vNormal;
-				vec4 pos = modelViewMatrix * transformationMatrix * vPosition;
-				fPosition = pos;
+				vec4 pos = vPosition * transformationMatrix;
+				fPosition = pos.xyz;
 				fColor = vColor;
 				gl_Position = vPosition * transformationMatrix * modelViewMatrix * projectionMatrix;
 			}
@@ -78,8 +78,10 @@ function main() {
 
 			uniform bool useShader;
 			uniform vec3 eye;
+			uniform vec3 lightPos;
+			uniform vec3 lightCol;
 
-			in vec4 fPosition;
+			in vec3 fPosition;
 			in vec4 fColor;
 			in vec4 normal;
 			void main()
@@ -90,8 +92,13 @@ function main() {
 				if (!useShader){
 					FragColor = fColor;
 				}else{
-					vec3 ambient = ambience * vec3(1.0, 1.0, 1.0);
-					vec3 result = ambient * fColor.xyz;
+					// diffuse light
+					vec3 norm = normalize(normal.xyz);
+					vec3 lightDir = normalize(lightPos - fPosition);
+					float diffuse = max(dot(norm, lightDir), 0.0);
+
+					vec3 effect = (ambience + diffuse) * lightCol;
+					vec3 result = effect * fColor.xyz;
 					FragColor = vec4(result, 1.0);
 					eye;
 					normal;
@@ -179,7 +186,11 @@ function renderModel(shaderProgram, positionArray, colorArray, normalArray, tran
 	var useShaderMatrixLoc = gl.getUniformLocation(shaderProgram, "useShader");
 	gl.uniform1i(useShaderMatrixLoc, useShading);
 	var eyeLoc = gl.getUniformLocation(shaderProgram, "eye");
-	gl.uniform3fv(eyeLoc, rotatedEye);
+	gl.uniform3fv(eyeLoc, new Float32Array(rotatedEye));
+	var lightColorLoc = gl.getUniformLocation(shaderProgram, "lightCol");
+	gl.uniform3fv(lightColorLoc, new Float32Array(lightColor));
+	var lightPosLoc = gl.getUniformLocation(shaderProgram, "lightPos");
+	gl.uniform3fv(lightPosLoc, new Float32Array(lightPos));
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 	gl.bufferData(
