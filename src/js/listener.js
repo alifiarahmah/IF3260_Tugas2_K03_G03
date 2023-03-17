@@ -8,6 +8,8 @@ function addListener() {
 	const cameraRotation = document.getElementById("cameraRotation");
 	const shadingSelector = document.getElementById("shading");
 	const lightColorSelector = document.getElementById("lightColor");
+	const lightRadiusSelector = document.getElementById("lightRadius");
+	const lightRotationSelector = document.getElementById("lightRotation");
 
 	projectionControl.addEventListener("change", function() {
 		console.log("projection changed");
@@ -48,6 +50,8 @@ function addListener() {
 		let blue = parseInt(color.slice(5, 7), 16)
 		lightColor = [red/255.0, green/255.0, blue/255.0]
 	}
+	lightRadiusSelector.oninput = () => {lightRadius = parseFloat(lightRadiusSelector.value)}
+	lightRotationSelector.oninput = () => {lightRotation = parseFloat(lightRotationSelector.value)}
 	
 	addRadius.onclick = () => changeRadius(0.05);
 	reduceRadius.onclick = () => changeRadius(-0.05);

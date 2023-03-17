@@ -29,7 +29,8 @@ var projection = [
 
 // light vars
 var useShading = true;
-var lightPos = [1, 1, 1];
+var lightRadius = 5;
+var lightRotation = 0;
 var lightColor = [1, 1, 1];
 
 
@@ -149,6 +150,8 @@ function renderModel(shaderProgram, positionArray, colorArray, normalArray, tran
 	const vertexCount = positionArray.length
 
 	let rotatedEye = rotateEye(radius, xAxis, yAxis);
+	let lightPos = rotateEye(lightRadius, 0, lightRotation);
+	lightPos[1] = 1;
 
 	// Flatten matrices
 	positionArray = flatten2d(positionArray);
