@@ -14,7 +14,7 @@ var transform = [
 	[0.0, 0.0, 0.0, 1.0]
 ]
 // camera vars
-var radius = 0.05;
+var radius = -0.2;
 var up = [0, 1, 0];
 var yAxis = 0;
 var xAxis = 0;
@@ -30,7 +30,7 @@ var projection = [
 // light vars
 var useShading = true;
 var lightRadius = 5;
-var lightRotation = 0;
+var lightRotation = 135;
 var lightColor = [1, 1, 1];
 
 

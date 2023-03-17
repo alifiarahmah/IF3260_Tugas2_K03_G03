@@ -18,7 +18,7 @@ function addListener() {
 
 	function changeRadius(delta){
 		let curRadius = radius;
-		if (curRadius + delta <= 0.0001 || curRadius + delta >=0.999)return;
+		if (curRadius + delta >= -0.0001 || curRadius + delta <= -0.999)return;
 		radius += delta;
 	}
 	
