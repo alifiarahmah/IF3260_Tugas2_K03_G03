@@ -27,6 +27,11 @@ var projection = [
 	[0, 0, 0, 1]
 ]
 
+// light vars
+var useShading = true;
+var lightPos = [1, 1, 1, 1];
+var lightColor = [1, 1, 1, 1];
+
 
 function main() {
 	if (!gl) {
@@ -74,6 +79,7 @@ function main() {
 			uniform bool useShader;
 			uniform vec3 eye;
 
+			in vec4 fPosition;
 			in vec4 fColor;
 			in vec4 normal;
 			void main()
@@ -89,6 +95,7 @@ function main() {
 					FragColor = vec4(result, 1.0);
 					eye;
 					normal;
+					fPosition;
 				}
 				
 			} 
@@ -170,7 +177,7 @@ function renderModel(shaderProgram, positionArray, colorArray, normalArray, tran
 	var projectionMatrixLoc = gl.getUniformLocation(shaderProgram, "projectionMatrix");
 	gl.uniformMatrix4fv(projectionMatrixLoc, false, new Float32Array(projectionMatrix));
 	var useShaderMatrixLoc = gl.getUniformLocation(shaderProgram, "useShader");
-	gl.uniform1i(useShaderMatrixLoc, 1);
+	gl.uniform1i(useShaderMatrixLoc, useShading);
 	var eyeLoc = gl.getUniformLocation(shaderProgram, "eye");
 	gl.uniform3fv(eyeLoc, rotatedEye);
 

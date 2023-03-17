@@ -6,6 +6,7 @@ function addListener() {
 	const reduceRadius = document.getElementById("reduceRadius");
 	const cameraAxis = document.getElementById("cameraAxis");
 	const cameraRotation = document.getElementById("cameraRotation");
+	const shadingSelector = document.getElementById("shading");
 
 	projectionControl.addEventListener("change", function() {
 		console.log("projection changed");
@@ -33,6 +34,8 @@ function addListener() {
 			xAxis = cameraRotation.value;
 		}
 	}
+
+	shadingSelector.onchange = () => {useShading = (shadingSelector.value === "Y")}
 	
 	addRadius.onclick = () => changeRadius(0.05);
 	reduceRadius.onclick = () => changeRadius(-0.05);
