@@ -40,9 +40,7 @@ function main() {
 			precision mediump float;
 			in vec4 vPosition;
 			in vec4 vColor;
-			
-			uniform vec4 lightPosition;
-			uniform vec4 eye;
+			in vec4 vNormal;
 
 			uniform mat4 transformationMatrix;
 			uniform mat4 modelViewMatrix;
@@ -50,11 +48,13 @@ function main() {
 
 			out vec4 fPosition;
 			out vec4 fColor;
+			out vec4 normal;
 
 			void main()
 			{
-				vec3 light = lightPosition.xyz;
-				vec3 pos = (modelViewMatrix * transformationMatrix * vPosition ).xyz;
+				normal = vNormal;
+				vec4 pos = modelViewMatrix * transformationMatrix * vPosition;
+				fPosition = pos;
 				fColor = vColor;
 				gl_Position = vPosition * transformationMatrix * modelViewMatrix * projectionMatrix;
 			}
@@ -70,8 +70,12 @@ function main() {
 		`   #version 300 es
 			precision mediump float;
 			out vec4 FragColor;
+
 			uniform bool useShader;
+			uniform vec3 eye;
+
 			in vec4 fColor;
+			in vec4 normal;
 			void main()
 			{
 				// constants
@@ -80,10 +84,11 @@ function main() {
 				if (!useShader){
 					FragColor = fColor;
 				}else{
-					float ambientStrength = 0.2;
-					vec3 ambient = ambientStrength * vec3(1.0, 1.0, 1.0);
+					vec3 ambient = ambience * vec3(1.0, 1.0, 1.0);
 					vec3 result = ambient * fColor.xyz;
 					FragColor = vec4(result, 1.0);
+					eye;
+					normal;
 				}
 				
 			} 
@@ -109,6 +114,7 @@ function main() {
 			program = shaderProgram;
 			
 			// get model
+			prism["normals"] = getNormal(prism)
 			models.push(prism)
 
 			render();
@@ -118,7 +124,7 @@ function main() {
 	}
 }
 
-function renderModel(shaderProgram, positionArray, colorArray, transformationMatrix){
+function renderModel(shaderProgram, positionArray, colorArray, normalArray, transformationMatrix){
 	// Constants
 	const mode = gl.TRIANGLES;
 	const vertexCount = positionArray.length
@@ -128,6 +134,7 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 	// Flatten matrices
 	positionArray = flatten2d(positionArray);
 	colorArray = flatten2d(colorArray);
+	normalArray = flatten2d(normalArray);
 	transformationMatrix = flatten2d(transformationMatrix);
 	let modelViewMatrix = flatten2d(generateModelView(rotatedEye, up))
 	let projectionMatrix = flatten2d(projection)
@@ -150,6 +157,12 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 	gl.vertexAttribPointer(colorCoord, 4, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray(colorCoord);
 
+	const normalBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+	const normalCoord = gl.getAttribLocation(shaderProgram, "vNormal");
+	gl.vertexAttribPointer(normalCoord, 4, gl.FLOAT, false, 0, 0);
+	gl.enableVertexAttribArray(normalCoord);
+
 	var translationMatrixLoc = gl.getUniformLocation(shaderProgram, "transformationMatrix");
 	gl.uniformMatrix4fv(translationMatrixLoc, false, new Float32Array(transformationMatrix));
 	var modelViewMatrixLoc = gl.getUniformLocation(shaderProgram, "modelViewMatrix");
@@ -158,28 +171,36 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 	gl.uniformMatrix4fv(projectionMatrixLoc, false, new Float32Array(projectionMatrix));
 	var useShaderMatrixLoc = gl.getUniformLocation(shaderProgram, "useShader");
 	gl.uniform1i(useShaderMatrixLoc, 1);
+	var eyeLoc = gl.getUniformLocation(shaderProgram, "eye");
+	gl.uniform3fv(eyeLoc, rotatedEye);
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-			gl.bufferData(
-				gl.ARRAY_BUFFER,
-				new Float32Array(positionArray),
-				gl.STATIC_DRAW
-			);
-			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-			gl.bufferData(
-				gl.ARRAY_BUFFER,
-				new Float32Array(colorArray),
-				gl.STATIC_DRAW
-			);
-			gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-			gl.drawArrays(mode, 0, vertexCount);
+	gl.bufferData(
+		gl.ARRAY_BUFFER,
+		new Float32Array(positionArray),
+		gl.STATIC_DRAW
+	);
+	gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+	gl.bufferData(
+		gl.ARRAY_BUFFER,
+		new Float32Array(colorArray),
+		gl.STATIC_DRAW
+	);
+	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+	gl.bufferData(
+		gl.ARRAY_BUFFER,
+		new Float32Array(normalArray),
+		gl.STATIC_DRAW
+	);
+	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+	
+	gl.drawArrays(mode, 0, vertexCount);
 }
 
 function render(){
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	models.forEach(model => {
-		renderModel(program, model["points"], model["colors"], transform)
+		renderModel(program, model["points"], model["colors"], model["normals"], transform)
 	})
 	window.requestAnimationFrame(render)
 }

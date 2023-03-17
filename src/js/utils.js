@@ -61,6 +61,28 @@ function cross3d(a, b){
     ];
 }
 
+// calculate normals of model
+function getNormal(model){
+    let pts = model["points"];
+    normals = []
+    if (pts.length % 3 != 0) throw Error("model point count wrong");
+    for(let i=0; i<pts.length; i+=3){
+        let a = pts[i];
+        let b = pts[i+1];
+        let c = pts[i+2];
+        let norm = cross3d(
+            [b[0]-a[0], b[1]-a[1], b[2]-a[2]], 
+            [c[0]-a[0], c[1]-a[1], c[2]-a[2]]
+        )
+        norm = normalize3d(norm)
+        norm.push(1)
+        normals.push(norm)
+        normals.push(norm)
+        normals.push(norm)
+    }
+    return normals;
+}
+
 // Provides requestAnimationFrame in a cross browser way.
 window.requestAnimFrame = (function() {
     return window.requestAnimationFrame ||
