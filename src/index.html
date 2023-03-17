@@ -11,9 +11,16 @@
 		<h1>3D Hollow Object</h1>
 		<div class="main-container">
 			<canvas id="gl-canvas" width="1600" height="1600"></canvas>
-				<label for="projection">Projection</label>
-				<div id="panel">
-					<select name="projection">
+			<div id="panel">
+				<div>
+					<label for="model">Model</label>
+					<select name="model" id="model">
+						<option value="orthographic">Prism</option>
+					</select>
+				</div>
+				<div>
+					<label for="projection">Projection</label>
+					<select name="projection" id="projection">
 						<option value="orthographic">Orthographic</option>
 						<option value="perspective">Perspective</option>
 						<option value="oblique">Oblique</option>
@@ -25,6 +32,7 @@
 		<script src="js/utils.js"></script>
 		<script src="models/base.js"></script>
 		<script src="models/prism.js"></script>
+		<script src="js/listener.js"></script>
 		<script src="js/main.js"></script>
 	</body>
 </html>

@@ -81,6 +81,8 @@ function main() {
 			models.push(prism)
 
 			render();
+
+			addListener();
 		}
 	}
 }
@@ -144,7 +146,7 @@ function render(){
 	models.forEach(model => {
 		renderModel(program, model["points"], model["colors"], transform)
 	})
-	window.requestAnimFrame(render)
+	window.requestAnimationFrame(render)
 }
 
 main();
