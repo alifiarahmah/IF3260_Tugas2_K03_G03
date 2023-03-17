@@ -75,7 +75,7 @@ function getNormal(model){
             [c[0]-a[0], c[1]-a[1], c[2]-a[2]]
         )
         norm = normalize3d(norm)
-        norm.push(1)
+        norm.push(0)
         normals.push(norm)
         normals.push(norm)
         normals.push(norm)

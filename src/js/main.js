@@ -53,11 +53,11 @@ function main() {
 
 			out vec3 fPosition;
 			out vec4 fColor;
-			out vec4 normal;
+			out vec3 normal;
 
 			void main()
 			{
-				normal = vNormal;
+				normal = (vNormal * transformationMatrix).xyz;
 				vec4 pos = vPosition * transformationMatrix;
 				fPosition = pos.xyz;
 				fColor = vColor;
@@ -83,7 +83,7 @@ function main() {
 
 			in vec3 fPosition;
 			in vec4 fColor;
-			in vec4 normal;
+			in vec3 normal;
 			void main()
 			{
 				// constants
@@ -93,7 +93,7 @@ function main() {
 					FragColor = fColor;
 				}else{
 					// diffuse light
-					vec3 norm = normalize(normal.xyz);
+					vec3 norm = normalize(normal);
 					vec3 lightDir = normalize(lightPos - fPosition);
 					float diffuse = max(dot(norm, lightDir), 0.0);
 
