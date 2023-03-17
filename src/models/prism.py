@@ -84,11 +84,17 @@ lines.append("\t],")
 
 # colors
 lines.append("\t\"colors\": [")
+idx = 0
+c1 = random.randrange(0, 255)/255
+c2 = random.randrange(0, 255)/255
+c3 = random.randrange(0, 255)/255
 for pt in points:
-    c1 = random.randrange(0, 255)/255
-    c2 = random.randrange(0, 255)/255
-    c3 = random.randrange(0, 255)/255
+    if (idx%6 == 0):
+        c1 = random.randrange(0, 255)/255
+        c2 = random.randrange(0, 255)/255
+        c3 = random.randrange(0, 255)/255
     lines.append(f"\t\t[{c1}, {c2}, {c3}, 1],")
+    idx += 1
 lines[-1] = lines[-1][:-1]
 lines.append("\t]")
 
