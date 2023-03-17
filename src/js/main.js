@@ -1,7 +1,7 @@
 "use strict";
 // constants
 const canvas = document.getElementById("gl-canvas");
-const gl = canvas.getContext("webgl");
+const gl = canvas.getContext("webgl2");
 
 /* program states */
 var models = [] // models has model objects that has array of vec4 points and colors
@@ -35,17 +35,22 @@ function main() {
 		
 	} else {
 		// Create shader
-		const vertCode = `
-			attribute vec4 vPosition;
-			attribute vec4 vColor;
-			varying vec4 fColor;
+		const vertCode = 
+		`   #version 300 es
+			precision mediump float;
+			in vec4 vPosition;
+			in vec4 vColor;
+			
 			uniform mat4 transformationMatrix;
 			uniform mat4 modelViewMatrix;
 			uniform mat4 projectionMatrix;
 
+			out vec4 fPosition;
+			out vec4 fColor;
+
 			void main()
 			{
-				gl_Position = projectionMatrix * modelViewMatrix * vPosition * transformationMatrix;
+				gl_Position = modelViewMatrix * vPosition;
 				fColor = vColor;
 			}
 		`;
@@ -53,19 +58,27 @@ function main() {
 		const vertShader = gl.createShader(gl.VERTEX_SHADER);
 		gl.shaderSource(vertShader, vertCode);
 		gl.compileShader(vertShader);
+		var compilationLog = gl.getShaderInfoLog(vertShader);
+		console.log('Shader compiler log: ' + compilationLog);
 		
-		const fragCode = `
+		const fragCode = 
+		`   #version 300 es
 			precision mediump float;
-			varying vec4 fColor;
+			out vec4 FragColor;
+			
+			in vec4 fColor; // the input variable from the vertex shader (same name and same type)  
+			
 			void main()
 			{
-				gl_FragColor = fColor;
-			}
+				FragColor = fColor;
+			} 
 		`;
 
 		const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
 		gl.shaderSource(fragShader, fragCode);
 		gl.compileShader(fragShader);
+		compilationLog = gl.getShaderInfoLog(fragShader);
+		console.log('Shader compiler log: ' + compilationLog);
 		
 		// Create program
 		const shaderProgram = gl.createProgram();
