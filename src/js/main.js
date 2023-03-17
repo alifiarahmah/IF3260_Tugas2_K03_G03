@@ -57,7 +57,7 @@ function main() {
 
 			void main()
 			{
-				normal = (vNormal * transformationMatrix).xyz;
+				normal = vNormal.xyz * mat3(transpose(inverse(transformationMatrix)));
 				vec4 pos = vPosition * transformationMatrix;
 				fPosition = pos.xyz;
 				fColor = vColor;
