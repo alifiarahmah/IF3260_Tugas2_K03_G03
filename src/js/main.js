@@ -41,6 +41,9 @@ function main() {
 			in vec4 vPosition;
 			in vec4 vColor;
 			
+			uniform vec4 lightPosition;
+			uniform vec4 eye;
+
 			uniform mat4 transformationMatrix;
 			uniform mat4 modelViewMatrix;
 			uniform mat4 projectionMatrix;
@@ -50,8 +53,10 @@ function main() {
 
 			void main()
 			{
-				gl_Position = modelViewMatrix * vPosition;
+				vec3 light = lightPosition.xyz;
+				vec3 pos = (modelViewMatrix * transformationMatrix * vPosition ).xyz;
 				fColor = vColor;
+				gl_Position = vPosition * transformationMatrix * modelViewMatrix * projectionMatrix;
 			}
 		`;
 
@@ -66,10 +71,13 @@ function main() {
 			precision mediump float;
 			out vec4 FragColor;
 			
-			in vec4 fColor; // the input variable from the vertex shader (same name and same type)  
+			in vec4 fColor;
 			
 			void main()
 			{
+				// constants
+				float shininess = 200.0;
+				float ambience = 0.05;
 				FragColor = fColor;
 			} 
 		`;
