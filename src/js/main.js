@@ -2,6 +2,8 @@
 // constants
 const canvas = document.getElementById("gl-canvas");
 const gl = canvas.getContext("webgl");
+const add_radius = document.getElementById("addRadius");
+const reduce_radius = document.getElementById("reduceRadius");
 
 // program states
 var models = [] // models has model objects that has array of vec4 points and colors
@@ -12,7 +14,7 @@ var transform = [
 	[0.0, 0.0, 1.0, 0.0],
 	[0.0, 0.0, 0.0, 1.0]
 ]
-var eye = [0, -0.01, -0.05]
+var eye = [0.05, 0.05, 0.05]
 var up = [0, 1, 0]
 var projection = [
 	[1, 0, 0, 0],
@@ -143,4 +145,16 @@ function render(){
 	window.requestAnimFrame(render)
 }
 
+function changeRadius(delta){
+	let curRadius = Math.sqrt(eye[0]*eye[0] + eye[1]*eye[1] + eye[2]*eye[2]);
+	if (curRadius + delta <= 0.0001 || curRadius + delta >=0.999)return;
+	curRadius += delta;
+	eye = normalize3d(eye);
+	eye[0] *= curRadius;
+	eye[1] *= curRadius;
+	eye[2] *= curRadius;
+}
+
+add_radius.onclick = () => changeRadius(0.05);
+reduce_radius.onclick = () => changeRadius(-0.05);
 main();
