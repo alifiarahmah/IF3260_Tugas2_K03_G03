@@ -26,6 +26,19 @@
 						<option value="oblique">Oblique</option>
 					</select>
 				</div>
+				<label for="cameraRadius">Camera Radius</label>
+				<div id="panel">
+					<button id="addRadius">+</button>
+					<button id="reduceRadius">-</button>
+				</div>
+				<label for="cameraRotation">Rotate Camera</label>
+				<div id="panel">
+					<select id="cameraAxis">
+						<option value="Y">Y Axis</option>
+						<option value="X">X Axis</option>
+					</select>
+					<input type="range" id="cameraRotation" min="0" max="360" value ="0" step = "0">
+				</div>
 		</div>
 
 		<script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
@@ -33,6 +46,7 @@
 		<script src="models/base.js"></script>
 		<script src="models/prism.js"></script>
 		<script src="js/listener.js"></script>
+		<script src="js/camera.js"></script>
 		<script src="js/main.js"></script>
 	</body>
 </html>

@@ -2,28 +2,35 @@
 // constants
 const canvas = document.getElementById("gl-canvas");
 const gl = canvas.getContext("webgl");
+const addRadius = document.getElementById("addRadius");
+const reduceRadius = document.getElementById("reduceRadius");
+const cameraAxis = document.getElementById("cameraAxis");
+const cameraRotation = document.getElementById("cameraRotation");
 
-// program states
+/* program states */
 var models = [] // models has model objects that has array of vec4 points and colors
 var program = "" // shader program in use
+// transform vars
 var transform = [ 
 	[1.0, 0.0, 0.0, 0.0],
-	[0.0, 0.707, 0.707, 0.0],
-	[0.0, -0.707, 0.707, 0.0],
+	[0.0, 1.0, 0.0, 0.0],
+	[0.0, 0.0, 1.0, 0.0],
 	[0.0, 0.0, 0.0, 1.0]
 ]
-var modelView = [
-	[1, 0, 0, 0],
-	[0, 1, 0, 0],
-	[0, 0, 1, 0],
-	[0, 0, 0, 1]
-]
+// camera vars
+var radius = 0.05;
+var up = [0, 1, 0];
+var yAxis = 0;
+var xAxis = 0;
+
+// projection
 var projection = [
 	[1, 0, 0, 0],
 	[0, 1, 0, 0],
 	[0, 0, 1, 0],
 	[0, 0, 0, 1]
 ]
+
 
 function main() {
 	if (!gl) {
@@ -92,11 +99,13 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 	const mode = gl.TRIANGLES;
 	const vertexCount = positionArray.length
 
+	let rotatedEye = rotateEye(radius, xAxis, yAxis);
+
 	// Flatten matrices
 	positionArray = flatten2d(positionArray);
 	colorArray = flatten2d(colorArray);
 	transformationMatrix = flatten2d(transformationMatrix);
-	let modelViewMatrix = flatten2d(modelView)
+	let modelViewMatrix = flatten2d(generateModelView(rotatedEye, up))
 	let projectionMatrix = flatten2d(projection)
 
 	// WebGL Rendering
@@ -149,4 +158,30 @@ function render(){
 	window.requestAnimationFrame(render)
 }
 
+function changeRadius(delta){
+	let curRadius = radius;
+	if (curRadius + delta <= 0.0001 || curRadius + delta >=0.999)return;
+	radius += delta;
+}
+
+function setCameraSlider(){
+	if (cameraAxis.value == "Y"){
+		cameraRotation.value = yAxis;
+	} else{
+		cameraRotation.value = xAxis;
+	}
+}
+
+function updateCameraRotation(){
+	if (cameraAxis.value == "Y"){
+		yAxis = cameraRotation.value;
+	} else{
+		xAxis = cameraRotation.value;
+	}
+}
+
+addRadius.onclick = () => changeRadius(0.05);
+reduceRadius.onclick = () => changeRadius(-0.05);
+cameraAxis.onchange = () => setCameraSlider();
+cameraRotation.oninput = () => updateCameraRotation();
 main();

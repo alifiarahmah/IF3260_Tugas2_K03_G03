@@ -14,7 +14,7 @@ def draw_rect(pts): #input is 3d
 # Const
 low_y = -0.8
 high_y = 0.8
-sides = 6
+sides = 360
 radius = 0.3
 thickness = 0.05
 color = [162/255, 142/255, 6/255, 1]
@@ -32,8 +32,6 @@ while (angle < 360):
     in_poly.append([x * in_radius / radius, z * in_radius / radius])
     angle += delta
 
-print(out_poly)
-print(in_poly)
 points = []
 for i in range(len(out_poly)):
     cur_out = out_poly[i]
@@ -84,11 +82,17 @@ lines.append("\t],")
 
 # colors
 lines.append("\t\"colors\": [")
+idx = 0
+c1 = random.randrange(0, 255)/255
+c2 = random.randrange(0, 255)/255
+c3 = random.randrange(0, 255)/255
 for pt in points:
-    c1 = random.randrange(0, 255)/255
-    c2 = random.randrange(0, 255)/255
-    c3 = random.randrange(0, 255)/255
+    if (idx%6 == 0):
+        c1 = random.randrange(0, 255)/255
+        c2 = random.randrange(0, 255)/255
+        c3 = random.randrange(0, 255)/255
     lines.append(f"\t\t[{c1}, {c2}, {c3}, 1],")
+    idx += 1
 lines[-1] = lines[-1][:-1]
 lines.append("\t]")
 
