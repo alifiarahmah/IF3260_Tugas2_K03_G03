@@ -70,15 +70,22 @@ function main() {
 		`   #version 300 es
 			precision mediump float;
 			out vec4 FragColor;
-			
+			uniform bool useShader;
 			in vec4 fColor;
-			
 			void main()
 			{
 				// constants
 				float shininess = 200.0;
-				float ambience = 0.05;
-				FragColor = fColor;
+				float ambience = 0.2;
+				if (!useShader){
+					FragColor = fColor;
+				}else{
+					float ambientStrength = 0.2;
+					vec3 ambient = ambientStrength * vec3(1.0, 1.0, 1.0);
+					vec3 result = ambient * fColor.xyz;
+					FragColor = vec4(result, 1.0);
+				}
+				
 			} 
 		`;
 
@@ -126,7 +133,7 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 	let projectionMatrix = flatten2d(projection)
 
 	// WebGL Rendering
-	gl.clearColor(1, 1, 1, 1.0);
+	gl.clearColor(0, 0, 0, 1.0);
 	gl.enable(gl.DEPTH_TEST);
 	gl.viewport(0, 0, canvas.width, canvas.height);
 
@@ -149,6 +156,8 @@ function renderModel(shaderProgram, positionArray, colorArray, transformationMat
 	gl.uniformMatrix4fv(modelViewMatrixLoc, false, new Float32Array(modelViewMatrix));
 	var projectionMatrixLoc = gl.getUniformLocation(shaderProgram, "projectionMatrix");
 	gl.uniformMatrix4fv(projectionMatrixLoc, false, new Float32Array(projectionMatrix));
+	var useShaderMatrixLoc = gl.getUniformLocation(shaderProgram, "useShader");
+	gl.uniform1i(useShaderMatrixLoc, 1);
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 			gl.bufferData(
