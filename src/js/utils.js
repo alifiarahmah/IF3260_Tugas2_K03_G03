@@ -20,6 +20,28 @@ function flatten2d(arr){
     return ret
 }
 
+// multiplies two matrices
+function matmul(a, b){
+    if (a[0].length != b.length) 
+        throw Error("Matrix sizes do not match");
+    let n = a.length;
+    let m = b[0].length;
+    let p = b.length;
+    let res = []
+    for(let i=0; i<n; i++){
+        res.push([]);
+        for(let j=0; j<m; j++)res.push(0);
+    }
+    for(let i=0; i<n; i++){
+        for(let j=0; j<m; j++){
+            for(let k=0; k<p; k++){
+                res[i][j] += (a[i][k] * b[k][j]);
+            }
+        }
+    }
+    return res;
+}
+
 // Provides requestAnimationFrame in a cross browser way.
 window.requestAnimFrame = (function() {
     return window.requestAnimationFrame ||
