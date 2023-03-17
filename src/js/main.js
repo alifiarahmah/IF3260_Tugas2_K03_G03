@@ -87,7 +87,7 @@ function main() {
 			void main()
 			{
 				// constants
-				float shininess = 64.0;
+				float shininess = 80.0;
 				float ambience = 0.2;
 				float specular = 0.8;
 				if (!useShader){
@@ -100,7 +100,7 @@ function main() {
 					//specular light
 					vec3 viewDir = normalize(eye - fPosition);
 					vec3 reflectDir = reflect(-lightDir, norm);
-					float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+					float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess) * specular;
 
 					vec3 effect = (ambience + diffuse + spec) * lightCol;
 					vec3 result = effect * fColor.xyz;
