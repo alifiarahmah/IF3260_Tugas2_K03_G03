@@ -89,8 +89,10 @@ function main() {
 			{
 				// constants
 				float shininess = 80.0;
-				float ambience = 0.2;
+				float ambience = 0.1;
 				float specular = 0.8;
+				float a = 0.2;
+				float b = 0.5;
 				if (!useShader){
 					FragColor = fColor;
 				}else{
@@ -98,11 +100,18 @@ function main() {
 					vec3 norm = normalize(normal);
 					vec3 lightDir = normalize(lightPos - fPosition);
 					float diffuse = max(dot(norm, lightDir), 0.0);
+
 					//specular light
 					vec3 viewDir = normalize(eye - fPosition);
 					vec3 reflectDir = reflect(-lightDir, norm);
 					float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess) * specular;
 
+					//intensity effect
+					float dist = sqrt(abs(dot(fPosition, lightPos)));
+					float iEffect = 1.0/(1.0 + dist * b + dist * dist * a);
+					diffuse *= iEffect;
+					spec *= iEffect;
+					
 					vec3 effect = (ambience + diffuse + spec) * lightCol;
 					vec3 result = effect * fColor.xyz;
 					FragColor = vec4(result, 1.0);
