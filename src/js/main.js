@@ -89,7 +89,7 @@ function main() {
 			{
 				// constants
 				float shininess = 80.0;
-				float ambience = 0.1;
+				float ambience = 0.15;
 				float specular = 0.8;
 				float a = 0.2;
 				float b = 0.5;
@@ -105,6 +105,8 @@ function main() {
 					vec3 viewDir = normalize(eye - fPosition);
 					vec3 reflectDir = reflect(-lightDir, norm);
 					float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess) * specular;
+
+					if(diffuse == 0.0)spec = 0.0;
 
 					//intensity effect
 					float dist = sqrt(abs(dot(fPosition, lightPos)));
