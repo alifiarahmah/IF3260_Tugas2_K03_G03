@@ -12,8 +12,8 @@ def draw_rect(pts): #input is 3d
     return ret #output is 3d
 
 # Const
-low_y = -0.8
-high_y = 0.8
+low_y = -0.12
+high_y = 0.12
 sides = 360
 radius = 0.3
 thickness = 0.05
