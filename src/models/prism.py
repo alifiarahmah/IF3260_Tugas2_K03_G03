@@ -76,7 +76,7 @@ lines.append("const prism = {")
 lines.append("\t\"points\": [")
 for pt in points:
     assert(len(pt)==3)
-    lines.append(f"\t\t[{pt[0]}, {pt[1]}, {pt[2]}, 1],")
+    lines.append(f"\t\t[{pt[0]}, {pt[1]}, {-pt[2]}, 1],")
 lines[-1] = lines[-1][:-1]
 lines.append("\t],")
 

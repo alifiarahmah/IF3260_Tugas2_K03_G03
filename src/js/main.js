@@ -14,7 +14,7 @@ var transform = [
 	[0.0, 0.0, 0.0, 1.0]
 ]
 // camera vars
-var radius = -0.2;
+var radius = 0.2;
 var up = [0, 1, 0];
 var yAxis = 0;
 var xAxis = 0;
@@ -23,14 +23,14 @@ var xAxis = 0;
 var projection = [
 	[1, 0, 0, 0],
 	[0, 1, 0, 0],
-	[0, 0, 1, 0],
+	[0, 0, -1/32000, 0],
 	[0, 0, 0, 1]
 ]
 
 // light vars
 var useShading = true;
 var lightRadius = 5;
-var lightRotation = 135;
+var lightRotation = 45;
 var lightColor = [1, 1, 1];
 
 
@@ -58,11 +58,11 @@ function main() {
 
 			void main()
 			{
-				normal = vNormal.xyz * mat3(transpose(inverse(transformationMatrix)));
-				vec4 pos = vPosition * transformationMatrix;
+				normal = mat3(transpose(inverse(transformationMatrix))) * vNormal.xyz;
+				vec4 pos = transformationMatrix * vPosition;
 				fPosition = pos.xyz;
 				fColor = vColor;
-				gl_Position = vPosition * transformationMatrix * modelViewMatrix * projectionMatrix;
+				gl_Position = projectionMatrix * modelViewMatrix * transformationMatrix * vPosition;
 			}
 		`;
 
@@ -78,7 +78,6 @@ function main() {
 			out vec4 FragColor;
 
 			uniform bool useShader;
-			uniform vec3 eye;
 			uniform vec3 lightPos;
 			uniform vec3 lightCol;
 
@@ -99,14 +98,14 @@ function main() {
 					// diffuse light
 					vec3 norm = normalize(normal);
 					vec3 lightDir = normalize(lightPos - fPosition);
-					float diffuse = max(dot(norm, lightDir), 0.0);
+					float diffuse = clamp(dot(norm, lightDir), 0.0, 1.0);
 
 					//specular light
-					vec3 viewDir = normalize(eye - fPosition);
-					vec3 reflectDir = reflect(-lightDir, norm);
-					float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess) * specular;
+					vec3 viewDir = normalize(-1.0 * fPosition);
+					vec3 reflectDir = normalize(reflect(-1.0 * lightDir, norm));
+					float spec = pow(clamp(dot(reflectDir, viewDir), 0.0, 1.0), shininess) * specular;
 
-					if(diffuse == 0.0)spec = 0.0;
+					//if(diffuse == 0.0)spec = 0.0;
 
 					//intensity effect
 					float dist = sqrt(abs(dot(fPosition, lightPos)));
@@ -117,9 +116,6 @@ function main() {
 					vec3 effect = (ambience + diffuse + spec) * lightCol;
 					vec3 result = effect * fColor.xyz;
 					FragColor = vec4(result, 1.0);
-					eye;
-					normal;
-					fPosition;
 				}
 				
 			} 
@@ -204,8 +200,6 @@ function renderModel(shaderProgram, positionArray, colorArray, normalArray, tran
 	gl.uniformMatrix4fv(projectionMatrixLoc, false, new Float32Array(projectionMatrix));
 	var useShaderMatrixLoc = gl.getUniformLocation(shaderProgram, "useShader");
 	gl.uniform1i(useShaderMatrixLoc, useShading);
-	var eyeLoc = gl.getUniformLocation(shaderProgram, "eye");
-	gl.uniform3fv(eyeLoc, new Float32Array(rotatedEye));
 	var lightColorLoc = gl.getUniformLocation(shaderProgram, "lightCol");
 	gl.uniform3fv(lightColorLoc, new Float32Array(lightColor));
 	var lightPosLoc = gl.getUniformLocation(shaderProgram, "lightPos");
