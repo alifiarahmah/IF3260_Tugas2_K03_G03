@@ -80,6 +80,7 @@ function main() {
 			uniform bool useShader;
 			uniform vec3 lightPos;
 			uniform vec3 lightCol;
+			uniform vec3 eye;
 
 			in vec3 fPosition;
 			in vec4 fColor;
@@ -92,6 +93,7 @@ function main() {
 				float specular = 0.8;
 				float a = 0.2;
 				float b = 0.5;
+				float c = 1.0;
 				if (!useShader){
 					FragColor = fColor;
 				}else{
@@ -101,15 +103,16 @@ function main() {
 					float diffuse = clamp(dot(norm, lightDir), 0.0, 1.0);
 
 					//specular light
-					vec3 viewDir = normalize(-1.0 * fPosition);
-					vec3 reflectDir = normalize(reflect(-1.0 * lightDir, norm));
-					float spec = pow(clamp(dot(reflectDir, viewDir), 0.0, 1.0), shininess) * specular;
+					vec3 viewDir = normalize(eye - fPosition);
+					vec3 reflectDir = reflect(-1.0 * lightDir, norm);
+					float spec = pow(clamp(dot(viewDir, reflectDir), 0.0, 1.0), shininess) * specular;
+					spec = 0.0;
 
-					//if(diffuse == 0.0)spec = 0.0;
+					if(diffuse == 0.0)spec = 0.0;
 
 					//intensity effect
 					float dist = sqrt(abs(dot(fPosition, lightPos)));
-					float iEffect = 1.0/(1.0 + dist * b + dist * dist * a);
+					float iEffect = 1.0/(c + dist * b + dist * dist * a);
 					diffuse *= iEffect;
 					spec *= iEffect;
 					
@@ -204,6 +207,8 @@ function renderModel(shaderProgram, positionArray, colorArray, normalArray, tran
 	gl.uniform3fv(lightColorLoc, new Float32Array(lightColor));
 	var lightPosLoc = gl.getUniformLocation(shaderProgram, "lightPos");
 	gl.uniform3fv(lightPosLoc, new Float32Array(lightPos));
+	var eyeLoc = gl.getUniformLocation(shaderProgram, "eye");
+	gl.uniform3fv(eyeLoc, new Float32Array(rotatedEye));
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 	gl.bufferData(
