@@ -12,8 +12,17 @@ function addListener() {
 	const lightRotationSelector = document.getElementById("lightRotation");
 
 	projectionControl.addEventListener("change", function() {
-		console.log("projection changed");
-		model = modelControl.value;
+		if (projectionControl.value == "orthographic"){
+			console.log("ortho")
+			projection = createOrthoMatrix();
+		} else if (projectionControl.value == "perspective"){
+			console.log("persp")
+			// TODO
+		} else { // oblique
+			console.log("oblique")
+			projection = createObliqueMatrix();
+			// TODO
+		}
 	});
 
 	function changeRadius(delta){
