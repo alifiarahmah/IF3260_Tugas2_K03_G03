@@ -20,7 +20,7 @@ var yAxis = 0;
 var xAxis = 0;
 
 // projection
-var projection = generatePerspective(radius);
+var projection = generatePerspective();
 
 // light vars
 var useShading = true;

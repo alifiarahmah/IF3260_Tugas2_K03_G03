@@ -19,10 +19,10 @@ function generateOblique(){
     ]
 }
 
-function generatePerspective(radius){
+function generatePerspective(){
     var fov = 80
-    var nearClip = 0.05;
-    var farClip = 5;
+    var nearClip = 0.01;
+    var farClip = 10;
 
     var aspect = 1;
     var factor = Math.tan(Math.PI * 0.5 - 0.5 * fov / 180 * Math.PI);
