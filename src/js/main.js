@@ -14,13 +14,13 @@ var transform = [
 	[0.0, 0.0, 0.0, 1.0]
 ]
 // camera vars
-var radius = 0.2;
+var radius = 0.9;
 var up = [0, 1, 0];
 var yAxis = 0;
 var xAxis = 0;
 
 // projection
-var projection = generateOblique();
+var projection = generatePerspective(radius);
 
 // light vars
 var useShading = true;
