@@ -83,6 +83,13 @@ function getNormal(model){
     return normals;
 }
 
+// dot product
+function dot(a, b){
+    let res = 0;
+    for(let i=0; i<a.length; i++)res+=a[i]*b[i];
+    return res;
+}
+
 // Provides requestAnimationFrame in a cross browser way.
 window.requestAnimFrame = (function() {
     return window.requestAnimationFrame ||
