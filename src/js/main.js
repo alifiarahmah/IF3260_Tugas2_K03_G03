@@ -20,7 +20,7 @@ var yAxis = 0;
 var xAxis = 0;
 
 // projection
-var projection = generatePerspective();
+var projection = generateOrtho();
 
 // light vars
 var useShading = true;
