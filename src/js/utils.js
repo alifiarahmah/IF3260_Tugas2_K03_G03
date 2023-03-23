@@ -30,7 +30,7 @@ function matmul(a, b){
     let res = []
     for(let i=0; i<n; i++){
         res.push([]);
-        for(let j=0; j<m; j++)res.push(0);
+        for(let j=0; j<m; j++)res[res.length-1].push(0);
     }
     for(let i=0; i<n; i++){
         for(let j=0; j<m; j++){
