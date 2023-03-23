@@ -145,6 +145,7 @@ function main() {
 			
 			// get model
 			prism["normals"] = getNormal(prism)
+			prism["centroid"] = getCentroid(prism)
 			models.push(prism)
 
 			render();
