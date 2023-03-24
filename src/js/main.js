@@ -4,8 +4,13 @@ const canvas = document.getElementById("gl-canvas");
 const gl = canvas.getContext("webgl2");
 
 /* program states */
-var models = [] // models has model objects that has array of vec4 points and colors
-var program = "" // shader program in use
+var models = []; // models has model objects that has array of vec4 points and colors
+var program = ""; // shader program in use
+
+// transformation vars
+var rotation = [0, 0, 0];
+var translation = [0, 0, 0];
+var scale = 1;
 
 // camera vars
 var radius = 0.5;
@@ -155,9 +160,9 @@ function renderModel(shaderProgram, model){
 	const centroid = model["centroid"];
 	const vertexCount = positionArray.length
 	let transformationMatrix = getTransformationMatrix(
-		[30 / 180 * Math.PI, 0, 0],
-		[0, 0, 0],
-		1,
+		rotation,
+		translation,
+		scale,
 		centroid
 	)
 
