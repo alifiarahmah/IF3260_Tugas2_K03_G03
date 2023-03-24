@@ -11,6 +11,16 @@ function addListener() {
 	const lightRadiusSelector = document.getElementById("lightRadius");
 	const lightRotationSelector = document.getElementById("lightRotation");
 
+	modelControl.addEventListener("change", () => {
+		if (modelControl.value == "prism"){
+			models.pop()
+			models.push(prism)
+		} else if (modelControl.value == "cube"){
+			models.pop()
+			models.push(cube)
+		}
+	})
+
 	projectionControl.addEventListener("change", function() {
 		if(projectionControl.value === "orthographic")projection = generateOrtho();
 		if(projectionControl.value === "oblique")projection = generateOblique();
@@ -20,7 +30,7 @@ function addListener() {
 	function changeRadius(delta){
 		radius += delta;
 	}
-	
+
 	function setCameraSlider(){
 		if (cameraAxis.value == "Y"){
 			cameraRotation.value = yAxis;
@@ -32,7 +42,7 @@ function addListener() {
 			cameraRotation.max = 90;
 		}
 	}
-	
+
 	function updateCameraRotation(){
 		if (cameraAxis.value == "Y"){
 			yAxis = cameraRotation.value;
@@ -51,7 +61,7 @@ function addListener() {
 	}
 	lightRadiusSelector.oninput = () => {lightRadius = parseFloat(lightRadiusSelector.value)}
 	lightRotationSelector.oninput = () => {lightRotation = parseFloat(lightRotationSelector.value)}
-	
+
 	addRadius.onclick = () => changeRadius(0.05);
 	reduceRadius.onclick = () => changeRadius(-0.05);
 	cameraAxis.onchange = () => setCameraSlider();
