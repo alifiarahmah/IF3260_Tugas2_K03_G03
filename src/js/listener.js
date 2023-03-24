@@ -10,6 +10,21 @@ function addListener() {
 	const lightColorSelector = document.getElementById("lightColor");
 	const lightRadiusSelector = document.getElementById("lightRadius");
 	const lightRotationSelector = document.getElementById("lightRotation");
+	const translationX = document.getElementById("translationX");
+	const translationY = document.getElementById("translationY");
+	const translationZ = document.getElementById("translationZ");
+	const rotationX = document.getElementById("rotationX");
+	const rotationY = document.getElementById("rotationY");
+	const rotationZ = document.getElementById("rotationZ");
+	const scaleSelector = document.getElementById("scale");
+
+	translationX.oninput = () => {translation[0] = translationX.value};
+	translationY.oninput = () => {translation[1] = translationY.value};
+	translationZ.oninput = () => {translation[2] = translationZ.value};
+	rotationX.oninput = () => {rotation[0] = rotationX.value / 180 * Math.PI};
+	rotationY.oninput = () => {rotation[1] = rotationY.value / 180 * Math.PI};
+	rotationZ.oninput = () => {rotation[2] = rotationZ.value / 180 * Math.PI};
+	scaleSelector.oninput = () => {scale = scaleSelector.value};
 
 	modelControl.addEventListener("change", () => {
 		if (modelControl.value == "ring"){

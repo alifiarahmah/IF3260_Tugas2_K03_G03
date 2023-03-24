@@ -5,17 +5,17 @@ function getTransformationMatrix(rotation, translation, scale, centroid){
         [0, 0, 1, 0],
         [0, 0, 0, 1]
     ];
+    res = matmul(translateMatrix(centroid), res);
+    res = matmul(translateMatrix(translation), res);
+    res = matmul(rotationX(rotation[0]), res);
+    res = matmul(rotationY(rotation[1]), res);
+    res = matmul(rotationZ(rotation[2]), res);
+    res = matmul(scaleMatrix(scale), res);
     res = matmul(translateMatrix([
         -1*centroid[0],
         -1*centroid[1],
         -1*centroid[2]
     ]), res);
-    res = matmul(rotationX(rotation[0]), res);
-    res = matmul(rotationY(rotation[1]), res);
-    res = matmul(rotationZ(rotation[2]), res);
-    res = matmul(scaleMatrix(scale), res);
-    res = matmul(translateMatrix(centroid), res);
-    res = matmul(translateMatrix(translation), res);
     return res;
 }
 
