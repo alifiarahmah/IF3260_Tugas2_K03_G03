@@ -87,8 +87,9 @@ function addListener() {
 	function load(){
 		var input = document.createElement('input');
 		input.type = 'file';
+		input.accept = 'application/json';
 		document.body.appendChild(input)
-		input.onchange = e => { 
+		input.onchange = e => {
 			// getting a hold of the file reference
 			var file = e.target.files[0]; 
 
@@ -140,6 +141,6 @@ function addListener() {
 		lightColorSelector.value = "#ffffff";
 		lightRadiusSelector.value = 5;
 	}
-	
+
 	defaultButton.onclick = () => {setDefaults()}
 }
