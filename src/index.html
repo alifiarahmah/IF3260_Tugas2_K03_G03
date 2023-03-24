@@ -13,6 +13,34 @@
 			<canvas id="gl-canvas" width="1600" height="1600"></canvas>
 			<div class="panel">
 				<div class="column-wrapper">
+					<h4>Lighting</h4>
+					<div>
+						<label for="light">Light Color</label>
+						<input type="color" id="lightColor"
+								value="#ffffff">
+					</div>
+					<label for="lightRadius">Light Radius</label>
+					<div>
+						<input type="range" id="lightRadius" min="1" max="30" value ="5" step = "0">
+					</div>
+					<label for="lightRotation">Rotate Light</label>
+					<div>
+						<input type="range" id="lightRotation" min="0" max="360" value ="0" step = "0">
+					</div>
+					<h4>Shading</h4>
+					<div>
+						<label for="shading">Use Shading</label>
+						<select id="shading">
+							<option value="Y">Yes</option>
+							<option value="N">No</option>
+						</select>
+					</div>
+					<h4>Load</h4>
+					<button class="button" id="load">
+						Load Model
+					</button>
+				</div>
+				<div class="column-wrapper">
 					<h4>Model</h4>
 					<div>
 						<label for="model">Model</label>
@@ -78,30 +106,6 @@
 					<input type="range" id="scale" min="0.1" max="10" value ="1" step = "0.01">
 					
 				</div>
-				<div class="column-wrapper">
-					<h4>Lighting</h4>
-					<div>
-						<label for="light">Light Color</label>
-						<input type="color" id="lightColor"
-								value="#ffffff">
-					</div>
-					<label for="lightRadius">Light Radius</label>
-					<div>
-						<input type="range" id="lightRadius" min="1" max="30" value ="5" step = "0">
-					</div>
-					<label for="lightRotation">Rotate Light</label>
-					<div>
-						<input type="range" id="lightRotation" min="0" max="360" value ="0" step = "0">
-					</div>
-					<h4>Shading</h4>
-					<div>
-						<label for="shading">Use Shading</label>
-						<select id="shading">
-							<option value="Y">Yes</option>
-							<option value="N">No</option>
-						</select>
-					</div>
-				</div>
 			</div>
 
 		<script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
@@ -109,10 +113,10 @@
 		<script src="models/base.js"></script>
 		<script src="models/ring.js"></script>
 		<script src="models/cube.js"></script>
-		<script src="js/listener.js"></script>
 		<script src="js/projection.js"></script>
 		<script src="js/camera.js"></script>
 		<script src="js/transformation.js"></script>
+		<script src="js/listener.js"></script>
 		<script src="js/main.js"></script>
 	</body>
 </html>

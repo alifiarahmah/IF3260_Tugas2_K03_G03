@@ -17,6 +17,7 @@ function addListener() {
 	const rotationY = document.getElementById("rotationY");
 	const rotationZ = document.getElementById("rotationZ");
 	const scaleSelector = document.getElementById("scale");
+	const loadButton = document.getElementById("load");
 
 	translationX.oninput = () => {translation[0] = translationX.value};
 	translationY.oninput = () => {translation[1] = translationY.value};
@@ -81,4 +82,36 @@ function addListener() {
 	reduceRadius.onclick = () => changeRadius(-0.05);
 	cameraAxis.onchange = () => setCameraSlider();
 	cameraRotation.oninput = () => updateCameraRotation();
+
+	function load(){
+		var input = document.createElement('input');
+		input.type = 'file';
+		document.body.appendChild(input)
+		input.onchange = e => { 
+			// getting a hold of the file reference
+			var file = e.target.files[0]; 
+
+			// setting up the reader
+			var reader = new FileReader();
+			reader.readAsText(file,'UTF-8');
+
+			// here we tell the reader what to do when it's done reading...
+			reader.onload = readerEvent => {
+				var content = readerEvent.target.result; // this is the content!
+				try{
+					data = JSON.parse(content)
+					models.pop()
+					let model = data
+					model["normals"] = getNormal(model);
+					model["centroid"] = getCentroid(model);
+					models.push(model);
+				}catch{
+					// no need
+				}
+			}
+		}
+		input.click();
+		document.body.removeChild(input)
+	}
+	loadButton.onclick = () => {load()}
 }
