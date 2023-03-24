@@ -10,6 +10,23 @@ function addListener() {
 	const lightColorSelector = document.getElementById("lightColor");
 	const lightRadiusSelector = document.getElementById("lightRadius");
 	const lightRotationSelector = document.getElementById("lightRotation");
+	const translationX = document.getElementById("translationX");
+	const translationY = document.getElementById("translationY");
+	const translationZ = document.getElementById("translationZ");
+	const rotationX = document.getElementById("rotationX");
+	const rotationY = document.getElementById("rotationY");
+	const rotationZ = document.getElementById("rotationZ");
+	const scaleSelector = document.getElementById("scale");
+	const loadButton = document.getElementById("load");
+	const defaultButton = document.getElementById("reset");
+
+	translationX.oninput = () => {translation[0] = translationX.value};
+	translationY.oninput = () => {translation[1] = translationY.value};
+	translationZ.oninput = () => {translation[2] = translationZ.value};
+	rotationX.oninput = () => {rotation[0] = rotationX.value / 180 * Math.PI};
+	rotationY.oninput = () => {rotation[1] = rotationY.value / 180 * Math.PI};
+	rotationZ.oninput = () => {rotation[2] = rotationZ.value / 180 * Math.PI};
+	scaleSelector.oninput = () => {scale = scaleSelector.value};
 
 	modelControl.addEventListener("change", () => {
 		if (modelControl.value == "ring"){
@@ -66,4 +83,63 @@ function addListener() {
 	reduceRadius.onclick = () => changeRadius(-0.05);
 	cameraAxis.onchange = () => setCameraSlider();
 	cameraRotation.oninput = () => updateCameraRotation();
+
+	function load(){
+		var input = document.createElement('input');
+		input.type = 'file';
+		document.body.appendChild(input)
+		input.onchange = e => { 
+			// getting a hold of the file reference
+			var file = e.target.files[0]; 
+
+			// setting up the reader
+			var reader = new FileReader();
+			reader.readAsText(file,'UTF-8');
+
+			// here we tell the reader what to do when it's done reading...
+			reader.onload = readerEvent => {
+				var content = readerEvent.target.result; // this is the content!
+				try{
+					data = JSON.parse(content)
+					models.pop()
+					let model = data
+					model["normals"] = getNormal(model);
+					model["centroid"] = getCentroid(model);
+					models.push(model);
+				}catch{
+					// no need
+				}
+			}
+		}
+		input.click();
+		document.body.removeChild(input)
+	}
+	loadButton.onclick = () => {load()}
+
+	function setDefaults(){
+		rotation = [0, 0, 0];
+		translation = [0, 0, 0];
+		scale = 1;
+		radius = 0.5;
+		yAxis = 0;
+		xAxis = 0;
+		useShading = true;
+		lightRadius = 5;
+		lightRotation = 45;
+		lightColor = [1, 1, 1];
+		rotationX.value = 0;
+		rotationY.value = 0;
+		rotationZ.value = 0;
+		translationX.value = 0;
+		translationY.value = 0;
+		translationZ.value = 0;
+		cameraAxis.value = "Y";
+		cameraRotation.value = 0;
+		shadingSelector.value = "Y";
+		lightRotationSelector.value = 45;
+		lightColorSelector.value = "#ffffff";
+		lightRadiusSelector.value = 5;
+	}
+	
+	defaultButton.onclick = () => {setDefaults()}
 }
