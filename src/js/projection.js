@@ -1,27 +1,36 @@
-function createSTMatrix(left, right, top, bottom, near, far) {
+function generateOrtho(){
     return [
-        [2/(right-left), 0, 0, 0],
-        [0, 2/(top-bottom), 0, 0],
-        [0, 0, -2/(far-near), 0],
-        [-(left+right)/(right-left), -(top+bottom)/(top-bottom), -(far+near)/(far-near), 1]
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, -1/32000, 0],
+        [0, 0, 0, 1]
     ]
 }
 
-function createOrthoMatrix() {
-    var m = [
+function generateOblique(){
+    let c = -1/Math.tan(75/180*Math.PI);
+    let d = -1/Math.tan(80/180*Math.PI);
+    console.log(c);
+    return [
         [1, 0, 0, 0],
         [0, 1, 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1],
-    ];
-    var st = createSTMatrix(-1, 1, 1, -1, 0.05, 10);
-    return matmul(m, st);
+        [c, d, -1/32000, 0],
+        [0, 0, 0, 1]
+    ]
 }
 
-var createObliqueMatrix = [
-    [1, 0, 0, 0],
-    [0, 1, 0, 0],
-    [0.3, 0.3, 0, 0],
-    [0, 0, 0, 1],
-]
+function generatePerspective(){
+    var fov = 80
+    var nearClip = 0.01;
+    var farClip = 10;
 
+    var aspect = 1;
+    var factor = Math.tan(Math.PI * 0.5 - 0.5 * fov / 180 * Math.PI);
+    var rangeInverse = 1.0 / (nearClip - farClip);
+    return [
+        [factor * aspect, 0, 0, 0],
+        [0, factor, 0, 0],
+        [0, 0, (nearClip + farClip) * rangeInverse, -1],
+        [0, 0, nearClip * farClip * rangeInverse , 1]
+    ]
+}

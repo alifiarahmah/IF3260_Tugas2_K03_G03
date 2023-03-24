@@ -20,12 +20,7 @@ var yAxis = 0;
 var xAxis = 0;
 
 // projection
-var projection = [
-	[1, 0, 0, 0],
-	[0, 1, 0, 0],
-	[0, 0, -1/32000, 0],
-	[0, 0, 0, 1]
-]
+var projection = generateOrtho();
 
 // light vars
 var useShading = true;
