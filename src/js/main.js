@@ -38,7 +38,7 @@ function main() {
 			in vec4 vNormal;
 
 			uniform mat4 transformationMatrix;
-			uniform mat4 modelViewMatrix;
+			uniform mat4 viewMatrix;
 			uniform mat4 projectionMatrix;
 
 			out vec3 fPosition;
@@ -51,7 +51,7 @@ function main() {
 				vec4 pos = transformationMatrix * vPosition;
 				fPosition = pos.xyz;
 				fColor = vColor;
-				gl_Position = projectionMatrix * modelViewMatrix * transformationMatrix * vPosition;
+				gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vPosition;
 			}
 		`;
 
@@ -170,7 +170,7 @@ function renderModel(shaderProgram, model){
 	colorArray = flatten2d(colorArray);
 	normalArray = flatten2d(normalArray);
 	transformationMatrix = flatten2d(transformationMatrix);
-	let modelViewMatrix = flatten2d(generateModelView(rotatedEye, up))
+	let viewMatrix = flatten2d(generateView(rotatedEye, up))
 	let projectionMatrix = flatten2d(projection)
 
 	// WebGL Rendering
@@ -199,8 +199,8 @@ function renderModel(shaderProgram, model){
 
 	var translationMatrixLoc = gl.getUniformLocation(shaderProgram, "transformationMatrix");
 	gl.uniformMatrix4fv(translationMatrixLoc, false, new Float32Array(transformationMatrix));
-	var modelViewMatrixLoc = gl.getUniformLocation(shaderProgram, "modelViewMatrix");
-	gl.uniformMatrix4fv(modelViewMatrixLoc, false, new Float32Array(modelViewMatrix));
+	var viewMatrixLoc = gl.getUniformLocation(shaderProgram, "viewMatrix");
+	gl.uniformMatrix4fv(viewMatrixLoc, false, new Float32Array(viewMatrix));
 	var projectionMatrixLoc = gl.getUniformLocation(shaderProgram, "projectionMatrix");
 	gl.uniformMatrix4fv(projectionMatrixLoc, false, new Float32Array(projectionMatrix));
 	var useShaderMatrixLoc = gl.getUniformLocation(shaderProgram, "useShader");

@@ -1,4 +1,4 @@
-function generateModelView(eye, up, at = [0, 0, 0]){
+function generateView(eye, up, at = [0, 0, 0]){
     var z = normalize3d([eye[0]-at[0], eye[1]-at[1], eye[2]-at[2]]);
     var x = normalize3d(cross3d(up, z));
     var y = normalize3d(cross3d(z, x));
