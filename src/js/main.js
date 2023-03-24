@@ -6,13 +6,7 @@ const gl = canvas.getContext("webgl2");
 /* program states */
 var models = [] // models has model objects that has array of vec4 points and colors
 var program = "" // shader program in use
-// transform vars
-var transform = [
-	[1.0, 0.0, 0.0, 0.0],
-	[0.0, 1.0, 0.0, 0.0],
-	[0.0, 0.0, 1.0, 0.0],
-	[0.0, 0.0, 0.0, 1.0]
-]
+
 // camera vars
 var radius = 0.5;
 var up = [0, 1, 0];
@@ -140,6 +134,7 @@ function main() {
 
 			// get model
 			prism["normals"] = getNormal(prism)
+			prism["centroid"] = getCentroid(prism)
 			models.push(prism)
 			cube["normals"] = getNormal(cube)
 
@@ -150,10 +145,20 @@ function main() {
 	}
 }
 
-function renderModel(shaderProgram, positionArray, colorArray, normalArray, transformationMatrix){
+function renderModel(shaderProgram, model){
 	// Constants
 	const mode = gl.TRIANGLES;
+	let positionArray = model["points"];
+	let colorArray = model["colors"];
+	let normalArray = model["normals"];
+	const centroid = model["centroid"];
 	const vertexCount = positionArray.length
+	let transformationMatrix = getTransformationMatrix(
+		[30 / 180 * Math.PI, 0, 0],
+		[0, 0, 0],
+		1,
+		centroid
+	)
 
 	let rotatedEye = rotateEye(radius, xAxis, yAxis);
 	let lightPos = rotateEye(lightRadius, 0, lightRotation);
@@ -232,7 +237,7 @@ function renderModel(shaderProgram, positionArray, colorArray, normalArray, tran
 function render(){
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	models.forEach(model => {
-		renderModel(program, model["points"], model["colors"], model["normals"], transform)
+		renderModel(program, model)
 	})
 	window.requestAnimationFrame(render)
 }
