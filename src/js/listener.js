@@ -18,6 +18,7 @@ function addListener() {
 	const rotationZ = document.getElementById("rotationZ");
 	const scaleSelector = document.getElementById("scale");
 	const loadButton = document.getElementById("load");
+	const defaultButton = document.getElementById("reset");
 
 	translationX.oninput = () => {translation[0] = translationX.value};
 	translationY.oninput = () => {translation[1] = translationY.value};
@@ -114,4 +115,31 @@ function addListener() {
 		document.body.removeChild(input)
 	}
 	loadButton.onclick = () => {load()}
+
+	function setDefaults(){
+		rotation = [0, 0, 0];
+		translation = [0, 0, 0];
+		scale = 1;
+		radius = 0.5;
+		yAxis = 0;
+		xAxis = 0;
+		useShading = true;
+		lightRadius = 5;
+		lightRotation = 45;
+		lightColor = [1, 1, 1];
+		rotationX.value = 0;
+		rotationY.value = 0;
+		rotationZ.value = 0;
+		translationX.value = 0;
+		translationY.value = 0;
+		translationZ.value = 0;
+		cameraAxis.value = "Y";
+		cameraRotation.value = 0;
+		shadingSelector.value = "Y";
+		lightRotationSelector.value = 45;
+		lightColorSelector.value = "#ffffff";
+		lightRadiusSelector.value = 5;
+	}
+	
+	defaultButton.onclick = () => {setDefaults()}
 }
