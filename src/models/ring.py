@@ -98,7 +98,7 @@ lines.append("\t]")
 
 # close
 lines.append("}")
-f = open("./src/models/prism.js", "w+")
+f = open("./src/models/ring.js", "w+")
 for line in lines:
     f.write(line)
     f.write("\n")

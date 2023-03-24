@@ -12,7 +12,7 @@ function addListener() {
 	const lightRotationSelector = document.getElementById("lightRotation");
 
 	modelControl.addEventListener("change", () => {
-		if (modelControl.value == "prism"){
+		if (modelControl.value == "ring"){
 			models.pop()
 			models.push(prism)
 		} else if (modelControl.value == "cube"){

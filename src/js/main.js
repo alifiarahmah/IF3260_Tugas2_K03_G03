@@ -137,6 +137,7 @@ function main() {
 			prism["centroid"] = getCentroid(prism)
 			models.push(prism)
 			cube["normals"] = getNormal(cube)
+			cube["centroid"] = getCentroid(cube)
 
 			render();
 
