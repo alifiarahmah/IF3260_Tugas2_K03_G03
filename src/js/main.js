@@ -7,7 +7,7 @@ const gl = canvas.getContext("webgl2");
 var models = [] // models has model objects that has array of vec4 points and colors
 var program = "" // shader program in use
 // transform vars
-var transform = [ 
+var transform = [
 	[1.0, 0.0, 0.0, 0.0],
 	[0.0, 1.0, 0.0, 0.0],
 	[0.0, 0.0, 1.0, 0.0],
@@ -38,10 +38,10 @@ function main() {
 	if (!gl) {
 		/* gl is not defined */
 		alert("Keliatannya browsermu tidak mendukung WebGL. :(");
-		
+
 	} else {
 		// Create shader
-		const vertCode = 
+		const vertCode =
 		`   #version 300 es
 			precision mediump float;
 			in vec4 vPosition;
@@ -71,8 +71,8 @@ function main() {
 		gl.compileShader(vertShader);
 		var compilationLog = gl.getShaderInfoLog(vertShader);
 		console.log('Shader compiler log: ' + compilationLog);
-		
-		const fragCode = 
+
+		const fragCode =
 		`   #version 300 es
 			precision mediump float;
 			out vec4 FragColor;
@@ -115,13 +115,13 @@ function main() {
 					float iEffect = 1.0/(c + dist * b + dist * dist * a);
 					diffuse *= iEffect;
 					spec *= iEffect;
-					
+
 					vec3 effect = (ambience + diffuse + spec) * lightCol;
 					vec3 result = effect * fColor.xyz;
 					FragColor = vec4(result, 1.0);
 				}
-				
-			} 
+
+			}
 		`;
 
 		const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -129,23 +129,24 @@ function main() {
 		gl.compileShader(fragShader);
 		compilationLog = gl.getShaderInfoLog(fragShader);
 		console.log('Shader compiler log: ' + compilationLog);
-		
+
 		// Create program
 		const shaderProgram = gl.createProgram();
 		gl.attachShader(shaderProgram, vertShader);
 		gl.attachShader(shaderProgram, fragShader);
 		gl.linkProgram(shaderProgram);
-		
+
 		if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
 			console.log(gl.getProgramInfoLog(shaderProgram));
 
 		} else {
 			gl.useProgram(shaderProgram);
 			program = shaderProgram;
-			
+
 			// get model
 			prism["normals"] = getNormal(prism)
 			models.push(prism)
+			cube["normals"] = getNormal(cube)
 
 			render();
 
@@ -229,7 +230,7 @@ function renderModel(shaderProgram, positionArray, colorArray, normalArray, tran
 		gl.STATIC_DRAW
 	);
 	gl.bindBuffer(gl.ARRAY_BUFFER, null);
-	
+
 	gl.drawArrays(mode, 0, vertexCount);
 }
 
