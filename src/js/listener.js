@@ -38,7 +38,12 @@ function addListener() {
 		} else if (modelControl.value == "cube"){
 			models.pop()
 			models.push(cube)
+		} else if (modelControl.value == "diamond"){
+			models.pop()
+			models.push(diamond)
 		}
+		
+
 	})
 
 	projectionControl.addEventListener("change", function() {

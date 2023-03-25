@@ -143,6 +143,9 @@ function main() {
 			models.push(prism)
 			cube["normals"] = getNormal(cube)
 			cube["centroid"] = getCentroid(cube)
+			diamond["normals"] = getNormal(diamond)
+			diamond["centroid"] = getCentroid(diamond)
+			
 
 			render();
 
