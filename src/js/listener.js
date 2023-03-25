@@ -19,6 +19,9 @@ function addListener() {
 	const scaleSelector = document.getElementById("scale");
 	const loadButton = document.getElementById("load");
 	const defaultButton = document.getElementById("reset");
+	const helpButton = document.getElementById("help");
+	const manualContainer = document.getElementById("manual");
+	const manualCloseButton = document.getElementById("close-manual");
 
 	translationX.oninput = () => {translation[0] = translationX.value};
 	translationY.oninput = () => {translation[1] = translationY.value};
@@ -43,6 +46,9 @@ function addListener() {
 		if(projectionControl.value === "oblique")projection = generateOblique();
 		if(projectionControl.value === "perspective")projection = generatePerspective();
 	});
+
+	helpButton.onclick = () => manualContainer.style.display = "block";
+	manualCloseButton.onclick = () => manualContainer.style.display = "none";
 
 	function changeRadius(delta){
 		radius += delta;
@@ -91,7 +97,7 @@ function addListener() {
 		document.body.appendChild(input)
 		input.onchange = e => {
 			// getting a hold of the file reference
-			var file = e.target.files[0]; 
+			var file = e.target.files[0];
 
 			// setting up the reader
 			var reader = new FileReader();

@@ -98,3 +98,28 @@ button {
 	border-radius: 4px;
 	cursor: pointer;
 }
+
+.manual-container {
+	display: none;
+	position: fixed;
+	background-color: darkred;
+	color: white;
+	padding: 10px;
+	border-radius: 5px;
+	top: 0;
+	left: 0;
+	transform: translate(calc(50vw - 50%), calc(50vh - 50%));
+	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+.manual-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.manual-container button {
+	background-color: bisque;
+	color: darkred;
+}
